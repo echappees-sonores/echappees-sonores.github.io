@@ -1,0 +1,5 @@
+# Des débuts remarqués à Berck-sur-Mer
+
+À peine née, Échappées Sonores a déjà su conquérir un premier public. En mai 2024, l'ensemble donne son tout premier concert à Berck-sur-Mer, ville du Pas-de-Calais connue pour son attachement à la culture et à la mer.
+
+Cette première sortie publique marque une étape fondatrice pour le chœur : celle de la rencontre avec le public, de la confrontation entre le travail de répétition et la réalité de la scène, de la confirmation que ce projet artistique méritait de voir le jour. Pour les choristes comme pour leur cheffe, ce premier concert a représenté bien plus qu'une simple performance : il a scellé l'identité du groupe, affirmé ses ambitions et ouvert la voie à de nombreux projets à venir.

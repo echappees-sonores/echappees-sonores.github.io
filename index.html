@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Echapees sonores | Chœur lyrique</title>
+    <title>Échappées Sonores | Chœur lyrique</title>
     <meta
       name="description"
-      content="Echapees sonores, chœur d'opéra: concerts, rencontres musicales et programmation."
+      content="Échappées Sonores, chœur d'opéra : concerts, rencontres musicales et programmation."
     >
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <header class="site-header" aria-label="Navigation principale">
-      <a class="brand" href="#accueil" aria-label="Echapees sonores, accueil">
+      <a class="brand" href="#accueil" aria-label="Échappées Sonores, accueil">
         <span class="brand-mark">ES</span>
-        <span>Echapees sonores</span>
+        <span>Échappées Sonores</span>
       </a>
 
       <nav class="site-nav" aria-label="Sections du site">
@@ -29,12 +29,12 @@
         <img
           class="hero-image"
           src="static/images/main.jpeg"
-          alt="Le chœur Echapees sonores en concert"
+          alt="Le chœur Échappées Sonores en concert"
         >
         <div class="hero-overlay"></div>
         <div class="hero-content">
         <p class="eyebrow">Chœur d'opéra</p>
-          <h1 id="hero-title">Echapees sonores</h1>
+          <h1 id="hero-title">Échappées Sonores</h1>
           <p>
             Des voix réunies autour du répertoire lyrique, de la scène et du
             plaisir vibrant de chanter ensemble.
@@ -50,9 +50,9 @@
         </div>
         <div class="intro-grid">
           <div class="intro-copy">
-            <div id="choir-description" class="prose" data-text-source="static/texts/presentation.txt">
+            <div id="choir-description" class="prose content-stack" data-content-section="about">
               <p>
-                Echapees sonores rassemble des chanteuses et chanteurs animés
+                Échappées Sonores rassemble des chanteuses et chanteurs animés
                 par le répertoire d'opéra, la polyphonie et les rencontres avec
                 le public. Le chœur construit des programmes exigeants et
                 accessibles, entre grands airs, pages chorales et moments de
@@ -60,12 +60,6 @@
               </p>
             </div>
           </div>
-          <figure class="intro-media">
-            <img
-              src="static/images/presentation.jpeg"
-              alt="Moment de répétition du chœur Echapees sonores"
-            >
-          </figure>
         </div>
       </section>
 
@@ -75,13 +69,9 @@
             <p class="eyebrow">Programmation</p>
             <h2 id="program-title">Événements et participations</h2>
           </div>
-          <p class="section-note">
-            Les archives et nouveaux rendez-vous sont alimentés depuis le
-            dossier <span>static/events</span>.
-          </p>
         </div>
 
-        <div class="events-list" id="events-list" aria-live="polite">
+        <div class="events-list" id="events-list" data-content-section="programming" aria-live="polite">
           <article class="event-card">
             <div class="event-image-wrap">
               <img src="static/images/presentation.jpeg" alt="">
@@ -102,19 +92,18 @@
         <div class="contact-content">
           <p class="eyebrow">Nous contacter</p>
           <h2 id="contact-title">Inviter le chœur ou rejoindre l'aventure.</h2>
-          <p>
+          <div class="prose contact-prose" data-content-section="contact">
+            <p>
             Pour une demande de concert, une collaboration artistique ou une
             question pratique, contactez l'ensemble par courriel.
-          </p>
+            </p>
+          </div>
         </div>
-        <a class="contact-button" href="mailto:contact@echapees-sonores.fr">
-          contact@echapees-sonores.fr
-        </a>
       </section>
     </main>
 
     <footer class="site-footer">
-      <p>Echapees sonores</p>
+      <p>Échappées Sonores</p>
       <p>Chœur d'opéra</p>
     </footer>
 

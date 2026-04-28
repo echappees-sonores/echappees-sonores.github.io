@@ -1,27 +1,151 @@
 (function () {
-  const fallbackDescription = [
-    "Echapees sonores rassemble des chanteuses et chanteurs animés par le répertoire d'opéra, la polyphonie et les rencontres avec le public.",
-    "Le chœur construit des programmes exigeants et accessibles, entre grands airs, pages chorales et moments de partage."
-  ];
+  const contentIndexPath = "static/content/content.json";
 
-  const fallbackEventText =
-    "La description de cet événement pourra être complétée dans le fichier desc.txt correspondant.";
+  const fallbackContent = {
+    about: [
+      "# Échappées Sonores\n\nÉchappées Sonores rassemble des chanteuses et chanteurs animés par le répertoire d'opéra, la polyphonie et les rencontres avec le public."
+    ],
+    programming: [
+      "# Programmation en cours de préparation\n\nLes événements apparaîtront ici automatiquement lorsque leurs descriptions seront disponibles."
+    ],
+    contact: [
+      "# Nous contacter\n\nPour une demande de concert, une collaboration artistique ou une question pratique, contactez l'ensemble par courriel."
+    ]
+  };
 
-  function splitParagraphs(text) {
-    return text
-      .split(/\n\s*\n/)
-      .map((paragraph) => paragraph.trim())
-      .filter(Boolean);
+  function appendTextWithLineBreaks(parent, text) {
+    text.split(/ {2,}\n|\n/).forEach((part, index) => {
+      if (index > 0) {
+        parent.append(document.createElement("br"));
+      }
+      parent.append(document.createTextNode(part));
+    });
   }
 
-  function renderParagraphs(container, paragraphs) {
-    container.replaceChildren(
-      ...paragraphs.map((paragraph) => {
-        const p = document.createElement("p");
-        p.textContent = paragraph;
-        return p;
-      })
-    );
+  function appendInlineMarkdown(parent, markdown) {
+    const tokenPattern = /(\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*)/g;
+    let cursor = 0;
+    let match;
+
+    while ((match = tokenPattern.exec(markdown)) !== null) {
+      appendTextWithLineBreaks(parent, markdown.slice(cursor, match.index));
+
+      if (match[2] && match[3]) {
+        const link = document.createElement("a");
+        link.href = match[3];
+        link.textContent = match[2];
+        parent.append(link);
+      } else if (match[4]) {
+        const strong = document.createElement("strong");
+        strong.textContent = match[4];
+        parent.append(strong);
+      }
+
+      cursor = match.index + match[0].length;
+    }
+
+    appendTextWithLineBreaks(parent, markdown.slice(cursor));
+  }
+
+  function readBlocks(markdown) {
+    const lines = markdown.replace(/\r\n?/g, "\n").trim().split("\n");
+    const blocks = [];
+    let index = 0;
+
+    while (index < lines.length) {
+      const line = lines[index].trim();
+
+      if (!line) {
+        index += 1;
+        continue;
+      }
+
+      const heading = /^(#{1,6})\s+(.+)$/.exec(line);
+      if (heading) {
+        blocks.push({ type: "heading", depth: heading[1].length, text: heading[2].trim() });
+        index += 1;
+        continue;
+      }
+
+      if (/^-\s+/.test(line)) {
+        const items = [];
+        while (index < lines.length && /^-\s+/.test(lines[index].trim())) {
+          items.push(lines[index].trim().replace(/^-\s+/, ""));
+          index += 1;
+        }
+        blocks.push({ type: "list", items });
+        continue;
+      }
+
+      const paragraph = [];
+      while (
+        index < lines.length &&
+        lines[index].trim() &&
+        !/^(#{1,6})\s+/.test(lines[index].trim()) &&
+        !/^-\s+/.test(lines[index].trim())
+      ) {
+        paragraph.push(lines[index].trim());
+        index += 1;
+      }
+      blocks.push({ type: "paragraph", text: paragraph.join("\n") });
+    }
+
+    return blocks;
+  }
+
+  function renderMarkdown(markdown, options) {
+    const fragment = document.createDocumentFragment();
+    const headingOffset = options && options.headingOffset ? options.headingOffset : 0;
+
+    readBlocks(markdown).forEach((block) => {
+      if (block.type === "heading") {
+        const level = Math.min(6, block.depth + headingOffset);
+        const heading = document.createElement(`h${level}`);
+        appendInlineMarkdown(heading, block.text);
+        fragment.append(heading);
+        return;
+      }
+
+      if (block.type === "list") {
+        const list = document.createElement("ul");
+        block.items.forEach((item) => {
+          const listItem = document.createElement("li");
+          appendInlineMarkdown(listItem, item);
+          list.append(listItem);
+        });
+        fragment.append(list);
+        return;
+      }
+
+      const paragraph = document.createElement("p");
+      appendInlineMarkdown(paragraph, block.text);
+      fragment.append(paragraph);
+    });
+
+    return fragment;
+  }
+
+  function splitDocument(markdown) {
+    const blocks = readBlocks(markdown);
+    const firstHeadingIndex = blocks.findIndex((block) => block.type === "heading");
+
+    if (firstHeadingIndex === -1) {
+      return { title: "Article", body: markdown };
+    }
+
+    const title = blocks[firstHeadingIndex].text;
+    const bodyStart = markdown
+      .replace(/\r\n?/g, "\n")
+      .split("\n")
+      .findIndex((line) => line.trim() === `${"#".repeat(blocks[firstHeadingIndex].depth)} ${title}`);
+    const body = markdown
+      .replace(/\r\n?/g, "\n")
+      .split("\n")
+      .slice(bodyStart + 1)
+      .join("\n")
+      .trim();
+
+    return { title, body };
   }
 
   async function loadText(path) {
@@ -32,30 +156,31 @@
     return response.text();
   }
 
-  async function loadEvents() {
-    const response = await fetch("static/events/events.json", { cache: "no-cache" });
+  async function loadContentIndex() {
+    const response = await fetch(contentIndexPath, { cache: "no-cache" });
     if (!response.ok) {
-      throw new Error("Registre des événements indisponible");
+      throw new Error("Registre de contenu indisponible");
     }
     return response.json();
   }
 
-  async function hydrateDescription() {
-    const container = document.querySelector("[data-text-source]");
-    if (!container) {
-      return;
-    }
-
-    try {
-      const text = await loadText(container.dataset.textSource);
-      const paragraphs = splitParagraphs(text);
-      renderParagraphs(container, paragraphs.length ? paragraphs : fallbackDescription);
-    } catch (error) {
-      renderParagraphs(container, fallbackDescription);
-    }
+  async function loadMarkdownGroup(index, section) {
+    const paths = index[section] || [];
+    const loaded = await Promise.all(
+      paths.map((path) => loadText(path).catch(() => ""))
+    );
+    return loaded.map((markdown) => markdown.trim()).filter(Boolean);
   }
 
-  function createEventCard(event, description) {
+  function createAboutArticle(markdown) {
+    const article = document.createElement("article");
+    article.className = "content-part";
+    article.append(renderMarkdown(markdown, { headingOffset: 2 }));
+    return article;
+  }
+
+  function createProgramCard(markdown) {
+    const documentParts = splitDocument(markdown);
     const article = document.createElement("article");
     article.className = "event-card";
 
@@ -63,11 +188,8 @@
     imageWrap.className = "event-image-wrap";
 
     const image = document.createElement("img");
-    image.src = event.image;
-    image.alt = event.title ? `Image de l'événement ${event.title}` : "Image d'événement";
-    image.onerror = function () {
-      image.src = "static/images/presentation.jpeg";
-    };
+    image.src = "static/images/presentation.jpeg";
+    image.alt = "";
     imageWrap.append(image);
 
     const body = document.createElement("div");
@@ -75,44 +197,52 @@
 
     const kicker = document.createElement("p");
     kicker.className = "event-kicker";
-    kicker.textContent = event.date || "Événement";
+    kicker.textContent = "Programmation";
 
     const title = document.createElement("h3");
-    title.textContent = event.title || "Événement";
+    appendInlineMarkdown(title, documentParts.title);
 
     body.append(kicker, title);
-    splitParagraphs(description || fallbackEventText).forEach((paragraph) => {
-      const p = document.createElement("p");
-      p.textContent = paragraph;
-      body.append(p);
-    });
+    body.append(renderMarkdown(documentParts.body, { headingOffset: 3 }));
 
     article.append(imageWrap, body);
     return article;
   }
 
-  async function hydrateEvents() {
-    const list = document.querySelector("#events-list");
-    const events = await loadEvents().catch(() => []);
+  function hydrateSection(section, markdownFiles) {
+    const container = document.querySelector(`[data-content-section="${section}"]`);
 
-    if (!list || !events.length) {
+    if (!container) {
       return;
     }
 
-    const cards = await Promise.all(
-      events.map(async (event) => {
-        try {
-          const text = await loadText(event.description);
-          return createEventCard(event, text.trim() || fallbackEventText);
-        } catch (error) {
-          return createEventCard(event, fallbackEventText);
-        }
-      })
-    );
+    if (section === "about") {
+      container.replaceChildren(...markdownFiles.map(createAboutArticle));
+      return;
+    }
 
-    list.replaceChildren(...cards);
+    if (section === "programming") {
+      container.replaceChildren(...markdownFiles.map(createProgramCard));
+      return;
+    }
+
+    if (section === "contact") {
+      const markdown = markdownFiles.join("\n\n");
+      const documentParts = splitDocument(markdown);
+      container.replaceChildren(renderMarkdown(documentParts.body, { headingOffset: 2 }));
+    }
   }
 
-  hydrateDescription();
-  hydrateEvents();
+  async function hydrateContent() {
+    const index = await loadContentIndex().catch(() => ({}));
+
+    await Promise.all(
+      Object.keys(fallbackContent).map(async (section) => {
+        const markdownFiles = await loadMarkdownGroup(index, section);
+        hydrateSection(section, markdownFiles.length ? markdownFiles : fallbackContent[section]);
+      })
+    );
+  }
+
+  hydrateContent();
 })();

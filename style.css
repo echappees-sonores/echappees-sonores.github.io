@@ -463,6 +463,19 @@ h2 {
   color: rgba(255, 255, 255, 0.84);
 }
 
+.site-footer {
+  width: min(var(--max), calc(100% - 40px));
+  margin: 0 auto;
+  padding: 0 0 34px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
 @media (max-width: 820px) {
   .site-header {
     position: fixed;
@@ -533,7 +546,8 @@ h2 {
   }
 
   .section,
-  .contact {
+  .contact,
+  .site-footer {
     width: calc(100% - 32px);
   }
 

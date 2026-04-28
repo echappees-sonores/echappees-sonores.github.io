@@ -188,7 +188,7 @@
     imageWrap.className = "event-image-wrap";
 
     const image = document.createElement("img");
-    image.src = "static/images/presentation.jpeg";
+    image.src = "static/images/music-sheet.jpeg";
     image.alt = "";
     imageWrap.append(image);
 

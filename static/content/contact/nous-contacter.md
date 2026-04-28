@@ -1,14 +1,8 @@
 # Nous contacter
 
-## Adresses e-mail
+## Adresse e-mail
 
-- Marilou Gonsseaume : [marilou.gonsseaume@gmail.com](mailto:marilou.gonsseaume@gmail.com)
-- Marie Martinez : [marie.mrtnz@laposte.net](mailto:marie.mrtnz@laposte.net)
-
-## Numéros de téléphone
-
-- Marilou Gonsseaume : [07 66 19 20 40](tel:+33766192040)
-- Marie Martinez : [07 66 55 80 40](tel:+33766558040)
+- [echappees-sonores@gmail.com](mailto:echappees-sonores@gmail.com)
 
 ## Réseaux sociaux
 

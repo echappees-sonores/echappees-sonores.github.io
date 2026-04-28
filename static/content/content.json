@@ -1,15 +1,32 @@
 {
-  "about": [
-    "static/content/about/01-ensemble-vocal-feminin.md",
-    "static/content/about/02-debuts-berck-sur-mer.md",
-    "static/content/about/03-formation-feminine.md",
-    "static/content/about/04-repertoire-lyrique.md",
-    "static/content/about/05-ensemble-en-ascension.md"
-  ],
-  "programming": [
-    "static/content/programming/2025-2026-elevation.md"
-  ],
-  "contact": [
-    "static/content/contact/nous-contacter.md"
-  ]
+  "fr": {
+    "about": [
+      "static/content/about/01-ensemble-vocal-feminin.md",
+      "static/content/about/02-debuts-berck-sur-mer.md",
+      "static/content/about/03-formation-feminine.md",
+      "static/content/about/04-repertoire-lyrique.md",
+      "static/content/about/05-ensemble-en-ascension.md"
+    ],
+    "programming": [
+      "static/content/programming/2025-2026-elevation.md"
+    ],
+    "contact": [
+      "static/content/contact/nous-contacter.md"
+    ]
+  },
+  "en": {
+    "about": [
+      "static/content/en/about/01-womens-vocal-ensemble.md",
+      "static/content/en/about/02-berck-sur-mer-debut.md",
+      "static/content/en/about/03-exceptional-womens-ensemble.md",
+      "static/content/en/about/04-lyrical-tradition.md",
+      "static/content/en/about/05-rising-ensemble.md"
+    ],
+    "programming": [
+      "static/content/en/programming/2025-2026-elevation.md"
+    ],
+    "contact": [
+      "static/content/en/contact/contact-us.md"
+    ]
+  }
 }

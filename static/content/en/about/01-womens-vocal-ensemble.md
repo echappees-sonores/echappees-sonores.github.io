@@ -1,0 +1,5 @@
+# Echappees Sonores - Women's vocal ensemble
+
+Born from a shared passion for lyrical singing and a common artistic standard, the women's vocal ensemble Echappees Sonores has established itself, since its creation in 2024, as an exceptional choral group in the heart of Paris.
+
+The choir was founded by Marilou Gonsseaume, a choir conductor specializing in conducting at the Conservatoire a Rayonnement Regional de Paris (CRR de Paris), where she studies with Pierre Louis de Laporte, a recognized figure in the French choral world. Shaped by a rigorous and passionate musical path, Marilou Gonsseaume was already experienced on the podium: after several years of choir conducting, she had led many concerts combining choir and orchestra, developing precise gesture, a keen ear and a clear artistic vision. Driven by the desire to bring together exceptional women's voices around an ambitious lyrical project, she founded Echappees Sonores, a name that says it all: escape through sound, freedom in music, and an invitation to an inner journey.

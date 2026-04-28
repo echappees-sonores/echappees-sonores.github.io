@@ -1,17 +1,92 @@
 (function () {
   const contentIndexPath = "static/content/content.json";
+  const languageStorageKey = "echappees-sonores-language";
+  const supportedLanguages = ["fr", "en"];
 
   const fallbackContent = {
-    about: [
-      "# Échappées Sonores\n\nÉchappées Sonores rassemble des chanteuses et chanteurs animés par le répertoire d'opéra, la polyphonie et les rencontres avec le public."
-    ],
-    programming: [
-      "# Programmation en cours de préparation\n\nLes événements apparaîtront ici automatiquement lorsque leurs descriptions seront disponibles."
-    ],
-    contact: [
-      "# Nous contacter\n\nPour une demande de concert, une collaboration artistique ou une question pratique, contactez l'ensemble par courriel."
-    ]
+    fr: {
+      about: [
+        "# Échappées Sonores\n\nÉchappées Sonores rassemble des chanteuses et chanteurs animés par le répertoire d'opéra, la polyphonie et les rencontres avec le public."
+      ],
+      programming: [
+        "# Programmation en cours de préparation\n\nLes événements apparaîtront ici automatiquement lorsque leurs descriptions seront disponibles."
+      ],
+      contact: [
+        "# Nous contacter\n\nPour une demande de concert, une collaboration artistique ou une question pratique, contactez l'ensemble par courriel."
+      ]
+    },
+    en: {
+      about: [
+        "# Echappees Sonores\n\nEchappees Sonores brings together singers driven by opera repertoire, polyphony and encounters with the audience."
+      ],
+      programming: [
+        "# Programming in preparation\n\nEvents will appear here automatically when their descriptions are available."
+      ],
+      contact: [
+        "# Contact us\n\nFor concert requests, artistic collaborations or practical questions, contact the ensemble by email."
+      ]
+    }
   };
+
+  const uiText = {
+    fr: {
+      documentTitle: "Échappées Sonores | Chœur lyrique",
+      description: "Échappées Sonores, chœur d'opéra : concerts, rencontres musicales et programmation.",
+      headerLabel: "Navigation principale",
+      brandLabel: "Échappées Sonores, accueil",
+      navLabel: "Sections du site",
+      languageLabel: "Choix de la langue",
+      heroImageAlt: "Le chœur Échappées Sonores en concert",
+      "nav.about": "À propos",
+      "nav.programming": "Programmation",
+      "nav.contact": "Nous contacter",
+      "hero.eyebrow": "Chœur d'opéra",
+      "hero.copy": "Des voix réunies autour du répertoire lyrique, de la scène et du plaisir vibrant de chanter ensemble.",
+      "hero.link": "Voir la programmation",
+      "about.eyebrow": "À propos",
+      "about.title": "Un chœur lyrique ouvert, sensible et vivant.",
+      "programming.eyebrow": "Programmation",
+      "programming.title": "Événements et participations",
+      "programming.loadingKicker": "Chargement",
+      "programming.loadingTitle": "Programmation en cours de préparation",
+      "programming.loadingCopy": "Les événements apparaîtront ici automatiquement lorsque leurs descriptions seront disponibles.",
+      "contact.eyebrow": "Nous contacter",
+      "contact.title": "Inviter le chœur ou rejoindre l'aventure.",
+      "contact.loadingCopy": "Pour une demande de concert, une collaboration artistique ou une question pratique, contactez l'ensemble par courriel.",
+      "footer.analytics": "Statistiques de visite via Cloudflare Web Analytics. Aucune donnée personnelle n'est collectée.",
+      programKicker: "Programmation"
+    },
+    en: {
+      documentTitle: "Échappées Sonores | Lyrical choir",
+      description: "Échappées Sonores, opera choir: concerts, musical encounters and programming.",
+      headerLabel: "Main navigation",
+      brandLabel: "Échappées Sonores, home",
+      navLabel: "Site sections",
+      languageLabel: "Language selection",
+      heroImageAlt: "The Échappées Sonores choir in concert",
+      "nav.about": "About",
+      "nav.programming": "Programming",
+      "nav.contact": "Contact us",
+      "hero.eyebrow": "Opera choir",
+      "hero.copy": "Voices brought together by lyrical repertoire, the stage and the vibrant pleasure of singing as one.",
+      "hero.link": "View programming",
+      "about.eyebrow": "About",
+      "about.title": "An open, sensitive and vibrant lyrical choir.",
+      "programming.eyebrow": "Programming",
+      "programming.title": "Events and appearances",
+      "programming.loadingKicker": "Loading",
+      "programming.loadingTitle": "Programming in preparation",
+      "programming.loadingCopy": "Events will appear here automatically when their descriptions are available.",
+      "contact.eyebrow": "Contact us",
+      "contact.title": "Invite the choir or join the adventure.",
+      "contact.loadingCopy": "For concert requests, artistic collaborations or practical questions, contact the ensemble by email.",
+      "footer.analytics": "Visit statistics are measured with Cloudflare Web Analytics. No personal data is collected.",
+      programKicker: "Programming"
+    }
+  };
+
+  let currentLanguage = getInitialLanguage();
+  let contentIndexPromise;
 
   function appendTextWithLineBreaks(parent, text) {
     text.split(/ {2,}\n|\n/).forEach((part, index) => {
@@ -157,15 +232,28 @@
   }
 
   async function loadContentIndex() {
+    if (contentIndexPromise) {
+      return contentIndexPromise;
+    }
+
     const response = await fetch(contentIndexPath, { cache: "no-cache" });
     if (!response.ok) {
       throw new Error("Registre de contenu indisponible");
     }
-    return response.json();
+    contentIndexPromise = response.json();
+    return contentIndexPromise;
   }
 
-  async function loadMarkdownGroup(index, section) {
-    const paths = index[section] || [];
+  function getSectionPaths(index, language, section) {
+    if (index[language] && index[language][section]) {
+      return index[language][section];
+    }
+
+    return index[section] || [];
+  }
+
+  async function loadMarkdownGroup(index, language, section) {
+    const paths = getSectionPaths(index, language, section);
     const loaded = await Promise.all(
       paths.map((path) => loadText(path).catch(() => ""))
     );
@@ -197,7 +285,7 @@
 
     const kicker = document.createElement("p");
     kicker.className = "event-kicker";
-    kicker.textContent = "Programmation";
+    kicker.textContent = uiText[currentLanguage].programKicker;
 
     const title = document.createElement("h3");
     appendInlineMarkdown(title, documentParts.title);
@@ -235,14 +323,88 @@
 
   async function hydrateContent() {
     const index = await loadContentIndex().catch(() => ({}));
+    const localizedFallback = fallbackContent[currentLanguage] || fallbackContent.fr;
 
     await Promise.all(
-      Object.keys(fallbackContent).map(async (section) => {
-        const markdownFiles = await loadMarkdownGroup(index, section);
-        hydrateSection(section, markdownFiles.length ? markdownFiles : fallbackContent[section]);
+      Object.keys(localizedFallback).map(async (section) => {
+        const markdownFiles = await loadMarkdownGroup(index, currentLanguage, section);
+        hydrateSection(section, markdownFiles.length ? markdownFiles : localizedFallback[section]);
       })
     );
   }
 
+  function getInitialLanguage() {
+    let storedLanguage = "";
+
+    try {
+      storedLanguage = window.localStorage.getItem(languageStorageKey);
+    } catch (error) {
+      storedLanguage = "";
+    }
+
+    if (supportedLanguages.includes(storedLanguage)) {
+      return storedLanguage;
+    }
+
+    return "fr";
+  }
+
+  function applyInterfaceText(language) {
+    const dictionary = uiText[language];
+    document.documentElement.lang = language;
+    document.title = dictionary.documentTitle;
+
+    const description = document.querySelector('meta[name="description"]');
+    if (description) {
+      description.content = dictionary.description;
+    }
+
+    const header = document.querySelector(".site-header");
+    const brand = document.querySelector(".brand");
+    const nav = document.querySelector(".site-nav");
+    const languageSwitch = document.querySelector(".language-switch");
+    const heroImage = document.querySelector(".hero-image");
+
+    if (header) header.setAttribute("aria-label", dictionary.headerLabel);
+    if (brand) brand.setAttribute("aria-label", dictionary.brandLabel);
+    if (nav) nav.setAttribute("aria-label", dictionary.navLabel);
+    if (languageSwitch) languageSwitch.setAttribute("aria-label", dictionary.languageLabel);
+    if (heroImage) heroImage.alt = dictionary.heroImageAlt;
+
+    document.querySelectorAll("[data-i18n]").forEach((element) => {
+      const key = element.dataset.i18n;
+      if (dictionary[key]) {
+        element.textContent = dictionary[key];
+      }
+    });
+
+    document.querySelectorAll("[data-language-button]").forEach((button) => {
+      const isActive = button.dataset.languageButton === language;
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+  }
+
+  async function setLanguage(language) {
+    if (!supportedLanguages.includes(language)) {
+      return;
+    }
+
+    currentLanguage = language;
+    try {
+      window.localStorage.setItem(languageStorageKey, language);
+    } catch (error) {
+      // The language switch still works when storage is unavailable.
+    }
+    applyInterfaceText(language);
+    await hydrateContent();
+  }
+
+  document.querySelectorAll("[data-language-button]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setLanguage(button.dataset.languageButton);
+    });
+  });
+
+  applyInterfaceText(currentLanguage);
   hydrateContent();
 })();

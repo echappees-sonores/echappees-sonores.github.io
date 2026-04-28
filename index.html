@@ -18,10 +18,15 @@
       </a>
 
       <nav class="site-nav" aria-label="Sections du site">
-        <a href="#a-propos">À propos</a>
-        <a href="#programmation">Programmation</a>
-        <a href="#contact">Nous contacter</a>
+        <a href="#a-propos" data-i18n="nav.about">À propos</a>
+        <a href="#programmation" data-i18n="nav.programming">Programmation</a>
+        <a href="#contact" data-i18n="nav.contact">Nous contacter</a>
       </nav>
+
+      <div class="language-switch" aria-label="Choix de la langue">
+        <button type="button" data-language-button="fr" aria-pressed="true">FR</button>
+        <button type="button" data-language-button="en" aria-pressed="false">EN</button>
+      </div>
     </header>
 
     <main id="accueil">
@@ -33,20 +38,20 @@
         >
         <div class="hero-overlay"></div>
         <div class="hero-content">
-        <p class="eyebrow">Chœur d'opéra</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Chœur d'opéra</p>
           <h1 id="hero-title">Échappées Sonores</h1>
-          <p>
+          <p data-i18n="hero.copy">
             Des voix réunies autour du répertoire lyrique, de la scène et du
             plaisir vibrant de chanter ensemble.
           </p>
-          <a class="hero-link" href="#programmation">Voir la programmation</a>
+          <a class="hero-link" href="#programmation" data-i18n="hero.link">Voir la programmation</a>
         </div>
       </section>
 
       <section class="section intro" id="a-propos" aria-labelledby="about-title">
         <div class="section-heading">
-          <p class="eyebrow">À propos</p>
-          <h2 id="about-title">Un chœur lyrique ouvert, sensible et vivant.</h2>
+          <p class="eyebrow" data-i18n="about.eyebrow">À propos</p>
+          <h2 id="about-title" data-i18n="about.title">Un chœur lyrique ouvert, sensible et vivant.</h2>
         </div>
         <div class="intro-grid">
           <div class="intro-copy">
@@ -70,8 +75,8 @@
       <section class="section program" id="programmation" aria-labelledby="program-title">
         <div class="section-heading section-heading-row">
           <div>
-            <p class="eyebrow">Programmation</p>
-            <h2 id="program-title">Événements et participations</h2>
+            <p class="eyebrow" data-i18n="programming.eyebrow">Programmation</p>
+            <h2 id="program-title" data-i18n="programming.title">Événements et participations</h2>
           </div>
         </div>
 
@@ -81,9 +86,9 @@
               <img src="static/images/presentation.jpeg" alt="">
             </div>
             <div class="event-body">
-              <p class="event-kicker">Chargement</p>
-              <h3>Programmation en cours de préparation</h3>
-              <p>
+              <p class="event-kicker" data-i18n="programming.loadingKicker">Chargement</p>
+              <h3 data-i18n="programming.loadingTitle">Programmation en cours de préparation</h3>
+              <p data-i18n="programming.loadingCopy">
                 Les événements apparaîtront ici automatiquement lorsque leurs
                 descriptions seront disponibles.
               </p>
@@ -94,10 +99,10 @@
 
       <section class="contact" id="contact" aria-labelledby="contact-title">
         <div class="contact-content">
-          <p class="eyebrow">Nous contacter</p>
-          <h2 id="contact-title">Inviter le chœur ou rejoindre l'aventure.</h2>
+          <p class="eyebrow" data-i18n="contact.eyebrow">Nous contacter</p>
+          <h2 id="contact-title" data-i18n="contact.title">Inviter le chœur ou rejoindre l'aventure.</h2>
           <div class="prose contact-prose" data-content-section="contact">
-            <p>
+            <p data-i18n="contact.loadingCopy">
             Pour une demande de concert, une collaboration artistique ou une
             question pratique, contactez l'ensemble par courriel.
             </p>
@@ -108,8 +113,10 @@
 
     <footer class="site-footer">
       <p>
-        Statistiques de visite via Cloudflare Web Analytics. Aucune donnée
-        personnelle n'est collectée.
+        <span data-i18n="footer.analytics">
+          Statistiques de visite via Cloudflare Web Analytics. Aucune donnée
+          personnelle n'est collectée.
+        </span>
       </p>
     </footer>
 

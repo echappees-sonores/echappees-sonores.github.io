@@ -2,6 +2,8 @@
   const contentIndexPath = "static/content/content.json";
   const languageStorageKey = "echappees-sonores-language";
   const supportedLanguages = ["fr", "en"];
+  const siteUrl = "https://echappees-sonores.github.io/";
+  const previewImageUrl = `${siteUrl}static/images/main.jpeg`;
 
   const fallbackContent = {
     fr: {
@@ -31,7 +33,10 @@
   const uiText = {
     fr: {
       documentTitle: "Échappées Sonores | Chœur lyrique",
-      description: "Échappées Sonores, chœur d'opéra : concerts, rencontres musicales et programmation.",
+      description: "Échappées Sonores, chœur lyrique : concerts, rencontres musicales et programmation.",
+      canonicalUrl: `${siteUrl}?lang=fr`,
+      ogLocale: "fr_FR",
+      ogAlternateLocale: "en_GB",
       headerLabel: "Navigation principale",
       brandLabel: "Échappées Sonores, accueil",
       navLabel: "Sections du site",
@@ -40,7 +45,7 @@
       "nav.about": "À propos",
       "nav.programming": "Programmation",
       "nav.contact": "Nous contacter",
-      "hero.eyebrow": "Chœur d'opéra",
+      "hero.eyebrow": "Chœur lyrique",
       "hero.copy": "Des voix réunies autour du répertoire lyrique, de la scène et du plaisir vibrant de chanter ensemble.",
       "hero.link": "Voir la programmation",
       "about.eyebrow": "À propos",
@@ -58,7 +63,10 @@
     },
     en: {
       documentTitle: "Échappées Sonores | Lyrical choir",
-      description: "Échappées Sonores, opera choir: concerts, musical encounters and programming.",
+      description: "Échappées Sonores, a lyrical choir: concerts, musical encounters and programming.",
+      canonicalUrl: `${siteUrl}?lang=en`,
+      ogLocale: "en_GB",
+      ogAlternateLocale: "fr_FR",
       headerLabel: "Main navigation",
       brandLabel: "Échappées Sonores, home",
       navLabel: "Site sections",
@@ -67,7 +75,7 @@
       "nav.about": "About",
       "nav.programming": "Programming",
       "nav.contact": "Contact us",
-      "hero.eyebrow": "Opera choir",
+      "hero.eyebrow": "Lyrical choir",
       "hero.copy": "Voices brought together by lyrical repertoire, the stage and the vibrant pleasure of singing as one.",
       "hero.link": "View programming",
       "about.eyebrow": "About",
@@ -334,6 +342,12 @@
   }
 
   function getInitialLanguage() {
+    const requestedLanguage = new URLSearchParams(window.location.search).get("lang");
+
+    if (supportedLanguages.includes(requestedLanguage)) {
+      return requestedLanguage;
+    }
+
     let storedLanguage = "";
 
     try {
@@ -358,6 +372,19 @@
     if (description) {
       description.content = dictionary.description;
     }
+
+    setMetaContent('meta[property="og:title"]', dictionary.documentTitle);
+    setMetaContent('meta[property="og:description"]', dictionary.description);
+    setMetaContent('meta[property="og:url"]', dictionary.canonicalUrl);
+    setMetaContent('meta[property="og:locale"]', dictionary.ogLocale);
+    setMetaContent('meta[property="og:locale:alternate"]', dictionary.ogAlternateLocale);
+    setMetaContent('meta[property="og:image"]', previewImageUrl);
+    setMetaContent('meta[property="og:image:alt"]', dictionary.heroImageAlt);
+    setMetaContent('meta[name="twitter:title"]', dictionary.documentTitle);
+    setMetaContent('meta[name="twitter:description"]', dictionary.description);
+    setMetaContent('meta[name="twitter:image"]', previewImageUrl);
+    setMetaContent('meta[name="twitter:image:alt"]', dictionary.heroImageAlt);
+    setLinkHref('link[rel="canonical"]', dictionary.canonicalUrl);
 
     const header = document.querySelector(".site-header");
     const brand = document.querySelector(".brand");
@@ -384,6 +411,26 @@
     });
   }
 
+  function setMetaContent(selector, content) {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.content = content;
+    }
+  }
+
+  function setLinkHref(selector, href) {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.href = href;
+    }
+  }
+
+  function updateLanguageUrl(language) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", language);
+    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+  }
+
   async function setLanguage(language) {
     if (!supportedLanguages.includes(language)) {
       return;
@@ -395,6 +442,7 @@
     } catch (error) {
       // The language switch still works when storage is unavailable.
     }
+    updateLanguageUrl(language);
     applyInterfaceText(language);
     await hydrateContent();
   }

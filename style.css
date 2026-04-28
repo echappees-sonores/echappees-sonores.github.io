@@ -560,22 +560,40 @@ h2 {
 
 @media (max-width: 560px) {
   .site-header {
-    padding: 12px;
+    gap: 6px;
+    padding: 8px;
+    border-radius: 999px;
   }
 
   .site-nav {
-    justify-content: center;
-    order: 2;
-    width: 100%;
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    white-space: nowrap;
+  }
+
+  .site-nav::-webkit-scrollbar {
+    display: none;
   }
 
   .site-nav a {
-    padding: 8px 10px;
+    flex: 0 0 auto;
+    padding: 8px 9px;
   }
 
   .language-switch {
-    order: 1;
-    margin: 0 auto;
+    margin: 0;
+    padding: 2px;
+  }
+
+  .language-switch button {
+    min-width: 32px;
+    min-height: 30px;
+    font-size: 0.72rem;
   }
 
   .hero {

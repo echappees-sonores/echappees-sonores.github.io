@@ -55,6 +55,7 @@
       "programming.loadingKicker": "Chargement",
       "programming.loadingTitle": "Programmation en cours de préparation",
       "programming.loadingCopy": "Les événements apparaîtront ici automatiquement lorsque leurs descriptions seront disponibles.",
+      "programming.eventImageAlt": "Visuel du concert Élévation",
       "contact.eyebrow": "Nous contacter",
       "contact.title": "Inviter le chœur ou rejoindre l'aventure.",
       "contact.loadingCopy": "Pour une demande de concert, une collaboration artistique ou une question pratique, contactez l'ensemble par courriel.",
@@ -85,6 +86,7 @@
       "programming.loadingKicker": "Loading",
       "programming.loadingTitle": "Programming in preparation",
       "programming.loadingCopy": "Events will appear here automatically when their descriptions are available.",
+      "programming.eventImageAlt": "Visual for the Elevation concert",
       "contact.eyebrow": "Contact us",
       "contact.title": "Invite the choir or join the adventure.",
       "contact.loadingCopy": "For concert requests, artistic collaborations or practical questions, contact the ensemble by email.",
@@ -277,16 +279,27 @@
 
   function createProgramCard(markdown) {
     const documentParts = splitDocument(markdown);
+    const normalizedTitle = documentParts.title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const isElevationEvent = normalizedTitle.includes("elevation");
     const article = document.createElement("article");
     article.className = "event-card";
 
     const imageWrap = document.createElement("div");
     imageWrap.className = "event-image-wrap";
 
-    const image = document.createElement("img");
-    image.src = "static/images/presentation.jpeg";
-    image.alt = "";
-    imageWrap.append(image);
+    if (isElevationEvent) {
+      const eventImage = document.createElement("img");
+      eventImage.className = "event-image";
+      eventImage.src = "static/images/elevation.jpeg";
+      eventImage.alt = uiText[currentLanguage]["programming.eventImageAlt"];
+      imageWrap.append(eventImage);
+    } else {
+      const image = document.createElement("img");
+      image.className = "event-image";
+      image.src = "static/images/presentation.jpeg";
+      image.alt = "";
+      imageWrap.append(image);
+    }
 
     const body = document.createElement("div");
     body.className = "event-body";

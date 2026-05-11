@@ -4,6 +4,7 @@
   const supportedLanguages = ["fr", "en"];
   const siteUrl = "https://echappees-sonores.github.io/";
   const previewImageUrl = `${siteUrl}static/images/main.jpeg`;
+  const donationWidgetUrl = "https://www.helloasso.com/associations/mlg-time/formulaires/1/widget";
 
   const fallbackContent = {
     fr: {
@@ -318,6 +319,36 @@
     return article;
   }
 
+  function createDonationWidget() {
+    const wrapper = document.createElement("div");
+    wrapper.className = "donation-widget";
+
+    const iframe = document.createElement("iframe");
+    iframe.id = "haWidget";
+    iframe.title = "Formulaire de don HelloAsso";
+    iframe.setAttribute("allowtransparency", "true");
+    iframe.scrolling = "auto";
+    iframe.src = donationWidgetUrl;
+    iframe.height = "750";
+
+    wrapper.append(iframe);
+    return wrapper;
+  }
+
+  function resizeDonationWidget(event) {
+    const dataHeight = parseFloat(event.data && event.data.height);
+    const iframe = document.getElementById("haWidget");
+
+    if (!iframe || Number.isNaN(dataHeight)) {
+      return;
+    }
+
+    if (dataHeight > parseFloat(iframe.height || 0)) {
+      iframe.height = String(dataHeight);
+      iframe.style.height = `${dataHeight}px`;
+    }
+  }
+
   function hydrateSection(section, markdownFiles) {
     const container = document.querySelector(`[data-content-section="${section}"]`);
 
@@ -339,6 +370,7 @@
       const markdown = markdownFiles.join("\n\n");
       const documentParts = splitDocument(markdown);
       container.replaceChildren(renderMarkdown(documentParts.body, { headingOffset: 2 }));
+      container.append(createDonationWidget());
     }
   }
 
@@ -466,6 +498,7 @@
     });
   });
 
+  window.addEventListener("message", resizeDonationWidget);
   applyInterfaceText(currentLanguage);
   hydrateContent();
 })();

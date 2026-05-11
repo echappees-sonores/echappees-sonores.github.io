@@ -14,4 +14,4 @@ Les informations d'inscription seront ajoutées prochainement.
 
 ## Appel aux dons
 
-Les modalités de soutien seront ajoutées prochainement.
+Vous pouvez soutenir les projets de l'ensemble via le formulaire sécurisé ci-dessous.

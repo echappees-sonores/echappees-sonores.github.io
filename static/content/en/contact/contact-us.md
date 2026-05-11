@@ -14,4 +14,4 @@ Subscription information will be added soon.
 
 ## Donations
 
-Support options will be added soon.
+You can support the ensemble's projects through the secure form below.

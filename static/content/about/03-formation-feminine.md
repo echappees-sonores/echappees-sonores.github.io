@@ -1,4 +1,4 @@
-# Une formation féminine d'un niveau exceptionnel
+# Une formation féminine d'un niveau ambitieux
 
 Échappées Sonores réunit une quinzaine de choristes, toutes femmes, toutes issues de formations musicales prestigieuses. 
 

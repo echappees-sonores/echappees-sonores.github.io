@@ -1,5 +1,5 @@
-# A repertoire rooted in the lyrical tradition
+# A repertoire anchored in the lyrical tradition
 
-The heart of Echappees Sonores' repertoire is classical. The ensemble explores and brings to life the great pages of the women's vocal repertoire, from early polyphony to twentieth-century works, through masterpieces of the Renaissance, Baroque, Classical and Romantic periods. Lyrical singing, with all its demands, stands at the center of every concert and every project.
+The heart of Échappées Sonores repertoire is classical. The ensemble strives to explore and and promote the great pages of the female vocal repertoire, from ancient polyphony to works of the 20th century, including masterpieces of the Renaissance, Baroque, Classicism and Romanticism. Lyrical singing, with all its demands, are an important part of every concert and every project.
 
-Conducting an ensemble of women's voices from the lyrical world also opens the way to a finely nuanced sound palette. From sopranos to mezzos and contraltos, the vocal range of Echappees Sonores offers a harmonic richness that immediately distinguishes the ensemble within the Parisian choral landscape.
+Conducting an ensemble of female voices from the lyrical world also omeans having the opportunity to explore sound colors of great subtlety — from sopranos to mezzos, including contraltos, the vocal palette of Échappées Sonores offers a harmonic richness intended to give a unique identity to the choir.

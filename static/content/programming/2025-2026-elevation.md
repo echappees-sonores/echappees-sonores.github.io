@@ -1,3 +1,5 @@
+![Visuel du concert Élévation](static/images/elevation.jpeg)
+
 # Élévation
 
 **Saison 2025/26**

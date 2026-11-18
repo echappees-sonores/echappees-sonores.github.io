@@ -1,3 +1,5 @@
+![Visual for the Elevation concert](static/images/elevation.jpeg)
+
 # Elevation
 
 **2025/26 season**

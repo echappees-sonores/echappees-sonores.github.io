@@ -56,7 +56,6 @@
       "programming.loadingKicker": "Chargement",
       "programming.loadingTitle": "Programmation en cours de préparation",
       "programming.loadingCopy": "Les événements apparaîtront ici automatiquement lorsque leurs descriptions seront disponibles.",
-      "programming.eventImageAlt": "Visuel du concert Élévation",
       "contact.eyebrow": "Nous contacter",
       "contact.title": "Inviter le chœur ou rejoindre l'aventure.",
       "contact.loadingCopy": "Pour une demande de concert, une collaboration artistique ou une question pratique, contactez l'ensemble par courriel.",
@@ -87,7 +86,6 @@
       "programming.loadingKicker": "Loading",
       "programming.loadingTitle": "Programming in preparation",
       "programming.loadingCopy": "Events will appear here automatically when their descriptions are available.",
-      "programming.eventImageAlt": "Visual for the Elevation concert",
       "contact.eyebrow": "Contact us",
       "contact.title": "Invite the choir or join the adventure.",
       "contact.loadingCopy": "For concert requests, artistic collaborations or practical questions, contact the ensemble by email.",
@@ -278,29 +276,57 @@
     return article;
   }
 
+  // Poster lines (`![alt](src)`) are pulled out of the markdown and shown in the card's image column.
+  function splitPosters(markdown) {
+    const posters = [];
+    const text = markdown
+      .split("\n")
+      .filter((line) => {
+        const match = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(line.trim());
+        if (match) {
+          posters.push({ alt: match[1], src: match[2] });
+        }
+        return !match;
+      })
+      .join("\n");
+
+    return { posters, text };
+  }
+
   function createProgramCard(markdown) {
-    const documentParts = splitDocument(markdown);
-    const normalizedTitle = documentParts.title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    const isElevationEvent = normalizedTitle.includes("elevation");
+    const { posters, text } = splitPosters(markdown);
+    const documentParts = splitDocument(text);
     const article = document.createElement("article");
     article.className = "event-card";
+    article.classList.toggle("event-card--multi", posters.length > 1);
 
     const imageWrap = document.createElement("div");
     imageWrap.className = "event-image-wrap";
 
-    if (isElevationEvent) {
-      const eventImage = document.createElement("img");
-      eventImage.className = "event-image";
-      eventImage.src = "static/images/elevation.jpeg";
-      eventImage.alt = uiText[currentLanguage]["programming.eventImageAlt"];
-      imageWrap.append(eventImage);
-    } else {
+    (posters.length ? posters : [{ alt: "", src: "static/images/presentation.jpeg" }]).forEach((poster) => {
       const image = document.createElement("img");
       image.className = "event-image";
-      image.src = "static/images/presentation.jpeg";
-      image.alt = "";
-      imageWrap.append(image);
-    }
+      image.src = poster.src;
+      image.alt = poster.alt;
+
+      if (posters.length > 1) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "event-poster";
+        button.append(image);
+        imageWrap.append(button);
+      } else {
+        imageWrap.append(image);
+      }
+    });
+
+    // The first poster is the large one: clicking a thumbnail moves it to the front.
+    imageWrap.addEventListener("click", (event) => {
+      const poster = event.target.closest(".event-poster");
+      if (poster && poster.previousElementSibling) {
+        imageWrap.prepend(poster);
+      }
+    });
 
     const body = document.createElement("div");
     body.className = "event-body";
